@@ -140,6 +140,9 @@
         },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.gugujiankong.app"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.gugujiankong.app"
         }
     },
     "dependent_plugins": {}

@@ -10,14 +10,22 @@ angular.module('starter.controllers', [])
 
         Websites.all($scope).success(function (data) {
             $ionicLoading.hide();
-
+            $scope.sites = data;
+            console.log(data);
         }).error(function (data) {
             //添加失败
             $ionicLoading.hide();
         });
 
         $scope.doRefresh = function () {
-            Websites.all($scope);
+            Websites.all($scope).success(function (data) {
+                $ionicLoading.hide();
+                $scope.sites = data;
+                console.log(data);
+            }).error(function (data) {
+                //添加失败
+                $ionicLoading.hide();
+            });
             //Stop the ion-refresher from spinning
             $scope.$broadcast('scroll.refreshComplete');
         }
@@ -198,6 +206,7 @@ angular.module('starter.controllers', [])
         $scope.data = {};
 
         if (localStorage.haslogin == 1) {
+            console.log("controllers,已登录");
             $ionicLoading.show({
                 template: '数据加载中...'
             });
@@ -206,7 +215,7 @@ angular.module('starter.controllers', [])
                 $ionicLoading.hide();
                 $("#notLogin").hide();
                 $("#hasLogon").show();
-
+                $scope.sites = data;
             }).error(function (data) {
                 //添加失败
                 $ionicLoading.hide();
@@ -236,7 +245,14 @@ angular.module('starter.controllers', [])
         }
 
         $scope.login = function () {
-            LoginService.loginUser($scope.data.username, $scope.data.password).success(function (data) {
+            if($scope.data.username==null || $scope.data.password==null){
+                $ionicPopup.alert({
+                    title: '提示',
+                    template: '用户名密码不可为空！'
+                });
+                return;
+            }
+            LoginService.loginUser($scope.data.username,$scope.data.password).success(function (data) {
                 //登录成功
                 localStorage.haslogin = 1;
                 //$window.location.reload(true);
@@ -258,7 +274,7 @@ angular.module('starter.controllers', [])
                 localStorage.haslogin = 0
                 var alertPopup = $ionicPopup.alert({
                     title: '登录失败',
-                    template: '请检查您填写的登陆信息！'
+                    template: '用户名或密码错误！'
                 });
             });
         }

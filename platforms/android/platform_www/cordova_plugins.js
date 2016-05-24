@@ -70,6 +70,14 @@ module.exports = [
         "clobbers": [
             "Connection"
         ]
+    },
+    {
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "id": "cordova-sqlite-storage.SQLitePlugin",
+        "pluginId": "cordova-sqlite-storage",
+        "clobbers": [
+            "SQLitePlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -83,7 +91,8 @@ module.exports.metadata =
     "com.jcjee.plugins.emailcomposer": "1.4.6",
     "org.apache.cordova.inappbrowser": "0.6.0",
     "cn.jpush.phonegap.JPushPlugin": "2.0.0",
-    "cordova-plugin-network-information": "1.0.1"
+    "cordova-plugin-network-information": "1.0.1",
+    "cordova-sqlite-storage": "1.4.1"
 }
 // BOTTOM OF METADATA
 });

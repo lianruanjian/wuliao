@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ui.router', 'starter.controllers', 'starter.services','ngCordova'])
+angular.module('starter', ['ionic', 'ui.router', 'starter.controllers', 'starter.services','ngCordova','angular-encryption'])
 
     .run(function ($ionicPlatform,$cordovaNetwork) {
         $ionicPlatform.ready(function () {
@@ -133,6 +133,6 @@ angular.module('starter', ['ionic', 'ui.router', 'starter.controllers', 'starter
             });
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/tab/account');
+        $urlRouterProvider.otherwise('tab/account');
 
     });

@@ -5,11 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
+var db = null;
 angular.module('starter', ['ionic', 'ui.router', 'starter.controllers', 'starter.services','ngCordova','angular-encryption'])
 
-    .run(function ($ionicPlatform,$cordovaNetwork) {
+    .run(function ($ionicPlatform,$cordovaNetwork,$rootScope) {
         $ionicPlatform.ready(function () {
-
+             $rootScope.host_url = host_url;
             //推送插件
             window.plugins.jPushPlugin.init();
 
@@ -45,7 +46,8 @@ angular.module('starter', ['ionic', 'ui.router', 'starter.controllers', 'starter
                         template: '网络异常，不能连接到服务器！'
                     });
                 })
-
+                db = $cordovaSQLite.openDB({name:"my.db"});
+                $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
             }, false);
         });
     })
