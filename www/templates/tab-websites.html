@@ -2,11 +2,13 @@
     <ion-content>
         <ion-refresher refreshing-icon="ion-loading-c" refreshing-text="云端获取数据中..." pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
         <ion-list>
-            <ion-item class="item-avatar" ng-repeat="site in sites">
-                <img ng-src="{{site.siteIcon}}" style="top:26px;">
-                <h2>{{site.steName}}</h2>
-                <p>{{site.siteUrl}}</p>
-                <p><img ng-src="{{site.statusIcon}}" style="vertical-align: sub;">{{site.ShowStatusTitle}}</p>
+            <ion-item class="" ng-repeat="site in sites" style="padding:8px">
+                <h2 style="word-break: break-all">{{site.title}}</h2>
+                <p>
+                    <span  ng-repeat="img in site.image_list">
+                        <img ng-src="{{img.url}}" style="padding:4px 0px;width:33%">
+                    </span>
+                </p>
             </ion-item>
         </ion-list>
     </ion-content>

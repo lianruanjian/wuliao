@@ -6,11 +6,9 @@ angular.module('starter.services', [])
                 var d = $q.defer();
                 var promise = d.promise;
                 console.log("userid:"+localStorage.userid);
-                $http.jsonp("http://api.shequshangdian.com/website/GetMyWebsites?userId=" + localStorage.userid + "&signToken=" + localStorage.signtoken + "&callback=JSON_CALLBACK")
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/websites?userId=" + localStorage.userid + "&signToken=" + localStorage.signtoken + "&callback=JSON_CALLBACK")
                     .success(function (data) {
-                        console.log("success");
-                        $scope.sites = data;
-                        d.resolve(data);
+                        d.resolve(data.results);
                     })
                     .error(function (error) {
                         console.log("fail");
@@ -120,7 +118,7 @@ angular.module('starter.services', [])
         };
     })
 
-    .service('LoginService', function ($q, $http) {
+    .service('LoginService', function ($q, $http,sha256) {
 
         return {
             loginUser: function (name, pw) {
@@ -128,11 +126,18 @@ angular.module('starter.services', [])
                 var promise = deferred.promise;
 
                 var loginResult = new Object();
+                var salt = "";
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/salt?username="+name+ "&callback=JSON_CALLBACK")
+                    .success(function(data){
+                        salt = data.results;
+                        console.log("加密后密码："+sha256.convertToSHA256(pw+data.results));
+                    });
+
+               
                 //ajax请求
-                $http.jsonp("http://192.168.38.109:8080/AlbertES/albert/mobile/login?username="+ name +"&password="+ pw + "&callback=JSON_CALLBACK")
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/login?username="+ name +"&password="+ sha256.convertToSHA256(pw+salt) + "&callback=JSON_CALLBACK")
                     .success(function (response) {
                         loginResult = response;
-                        console.log(response);
                         if (loginResult.error == 0) {
                             localStorage.signtoken = loginResult.results;
                             localStorage.userid = name;

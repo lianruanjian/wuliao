@@ -5,13 +5,13 @@ angular.module('starter.services', [])
             all: function ($scope) {
                 var d = $q.defer();
                 var promise = d.promise;
-
-                $http.jsonp("http://api.shequshangdian.com/website/GetMyWebsites?userId=" + localStorage.userid + "&signToken=" + localStorage.signtoken + "&callback=JSON_CALLBACK")
+                console.log("userid:"+localStorage.userid);
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/websites?userId=" + localStorage.userid + "&signToken=" + localStorage.signtoken + "&callback=JSON_CALLBACK")
                     .success(function (data) {
-                        $scope.sites = data;
-                        d.resolve(data);
+                        d.resolve(data.results);
                     })
                     .error(function (error) {
+                        console.log("fail");
                         d.reject(error);
                     });
                 promise.success = function (fn) {
@@ -118,7 +118,7 @@ angular.module('starter.services', [])
         };
     })
 
-    .service('LoginService', function ($q, $http) {
+    .service('LoginService', function ($q, $http,sha256) {
 
         return {
             loginUser: function (name, pw) {
@@ -126,16 +126,24 @@ angular.module('starter.services', [])
                 var promise = deferred.promise;
 
                 var loginResult = new Object();
+                var salt = "";
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/salt?username="+name+ "&callback=JSON_CALLBACK")
+                    .success(function(data){
+                        salt = data.results;
+                        console.log("加密后密码："+sha256.convertToSHA256(pw+data.results));
+                    });
+
+               
                 //ajax请求
-                $http.jsonp("http://api.shequshangdian.com/account/Login?email=" + name + "&password=" + pw + "&callback=JSON_CALLBACK")
+                $http.jsonp("http://192.168.38.116:8080/AlbertES/albert/mobile/login?username="+ name +"&password="+ sha256.convertToSHA256(pw+salt) + "&callback=JSON_CALLBACK")
                     .success(function (response) {
                         loginResult = response;
-                        if (loginResult.LoginStatus == 1) {
-                            localStorage.signtoken = loginResult.SignToken;
-                            localStorage.userid = loginResult.UserId;
+                        if (loginResult.error == 0) {
+                            localStorage.signtoken = loginResult.results;
+                            localStorage.userid = name;
 
                             //设置客户端的别名，用于定向接收消息的推送
-                            window.plugins.jPushPlugin.setAlias("Client" + loginResult.UserId);
+                            window.plugins.jPushPlugin.setAlias("Client" + name);
 
                             deferred.resolve('Welcome ' + name + '!');
                         } else {

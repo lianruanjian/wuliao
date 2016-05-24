@@ -11,7 +11,7 @@ angular.module('starter.controllers', [])
         Websites.all($scope).success(function (data) {
             $ionicLoading.hide();
             $scope.sites = data;
-            console.log(data);
+            console.log(data[0].image_list);
         }).error(function (data) {
             //添加失败
             $ionicLoading.hide();
